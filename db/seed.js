@@ -1,39 +1,11 @@
-/* eslint-disable func-names, no-console  */
-const mongoose = require('mongoose');
-const { ShowCase } = require('./index.js');
+/* eslint-disable func-names */
+const fs = require('fs');
+const faker = require('faker');
+const argv = require('yargs').argv
 
-const cities = [
-  'Bangkok, Thailand',
-  'Samut Prakan, Thailand',
-  'Nonthaburi, Thailand',
-  'Udon Thani, Thailand',
-  'Chon Buri, Thailand',
-  'Nakhon Ratchasima, Thailand',
-  'Hat Yai, Thailand',
-  'Pak Kret, Thailand',
-  'Si Racha, Thailand',
-  'Phra Pradaeng, Thailand',
-  'Lampang, Thailand',
-  'Chiang Mai, Thailand',
-  'Khon Kaen, Thailand',
-  'Surat Thani, Thailand',
-  'Thanyaburi, Thailand',
-];
-
-const attractionTitles = [
-  'Railay Beach',
-  'Koh Phi Phi',
-  'The Grand Palace',
-  'Sunday Walking Street',
-  'Pai',
-  'Wild Elephants at Khao Yai National Park',
-  'Sukhothai Old City',
-  'Historic City of Ayutthaya',
-  'Doi Suthep',
-  'Floating Markets',
-  'Phuphrabat Historical Park',
-  'Phra That Phanom',
-];
+const lines = argv.lines || 10;
+const filename = argv.output || 'posts.csv';
+const writeStream = fs.createWriteStream(filename);
 
 const attractionTypes = [
   'National Park',
@@ -64,22 +36,8 @@ const descriptions = [
   'How much does the pirate pay for an ear piercing?',
 ];
 
-const addresses = [
-  'Jalan Tpj2 Taman Perindustrian Jaya, Subang Jaya, Selangor, 47200',
-  'Jalan Anggerik 25 Taman Johor Jaya, 81100',
-  'Johor Malaysia, Johor Bahru, Johor, 81100',
-  'Jalan Terolak 4, Taman Bamboo, Jalan, Ipoh, 51200',
-  '203 SEKSYEN 51 46050, Petaling',
-  'Jaya 46050 Malaysia',
-  'Petaling Jaya, Selangor, 46050',
-  '23 Tingkat Daruzzakah Lorong Haji Hussein Off Jalan Raja, 50007',
-  'Muda Wilayah Persekutuan, Malaysia 50676',
-  'Kuala Lumpur, Wilayah Persekutuan, 50676',
-  'Jalan Perpaduan, Kampung Air, 88000',
-];
-
 const urlGen = function (id) {
-  return `https://d3tteoxp56tq1d.cloudfront.net/images/tripadvisor_thailand_${id}.jpg`;
+  return `https://awsm-hr.s3.us-east-2.amazonaws.com/showcaseImages/images/image${id}.jpg`;
 };
 
 const randomGenerator = function (min, list) {
@@ -100,47 +58,23 @@ const picsListGen = function () {
 
 const bools = [true, false];
 
-class Attraction {
-  constructor(id) {
-    this.attractionTitle = randomGenerator(null, attractionTitles);
-    this.city = randomGenerator(null, cities);
-    this.relativeRanking = [randomGenerator(1, 34), randomGenerator(35, 101)];
-    this.ratio = this.relativeRanking[0] / this.relativeRanking[1];
-    this.attractionType = randomGenerator(null, attractionTypes);
-    this.reviews = randomGenerator(0, 3000);
-    this.overview = {
-      description: randomGenerator(null, descriptions),
-      isOpen: randomGenerator(null, bools),
-      suggestedDuration: randomGenerator(0, 200),
-      address: randomGenerator(null, addresses),
-    };
-    this.imageUrl = [urlGen(id), ...picsListGen()];
-    this.travelersChoiceAward = randomGenerator(null, bools);
-    this.likedStatus = randomGenerator(null, bools);
-    this.ticketPrice = randomGenerator(0, 500);
-    this.averageRating = randomGenerator(0, 25) / 5;
-  }
-}
+const createAttraction = (id) => {
+  const location = faker.address.city();
+  const attractionTitle = faker.commerce.productName;
+  const city = location;
+  const reviews = randomGenerator(0, 3000);
+  const relativeRanking = [randomGenerator(1, 34), randomGenerator(35, 101)];
+  const ratio = relativeRanking[0] / relativeRanking[1];
+  const attractionType = randomGenerator(null, attractionTypes);
+  const description = randomGenerator(null, descriptions);
+  const isOpen = randomGenerator(null, bools);
+  const suggestedDuration = randomGenerator(0, 200);
+  const address = `${faker.address.streetAddress()}, ${location}, ${faker.address.zipCode}, ${faker.address.country}`;
+  const imageUrl = [urlGen(id), ...picsListGen()];
+  const travelersChoiceAward = randomGenerator(null, bools);
+  const likedStatus = randomGenerator(null, bools);
+  const ticketPrice = randomGenerator(0, 500);
+  const averageRating = randomGenerator(0, 25) / 5;
 
-const seedData = [];
-
-for (let i = 0; i < 100; i += 1) {
-  const newAttraction = new Attraction(i);
-
-  seedData.push(newAttraction);
-}
-
-ShowCase.find()
-  .then((result) => {
-    if (result.length === 0) {
-      ShowCase.create(seedData)
-        .then(() => {
-          console.log('db seeded!');
-          mongoose.connection.close();
-        });
-    } else {
-      console.log('db already seeded');
-      mongoose.connection.close();
-    }
-  })
-  .catch((err) => console.log('error finding db', err));
+  return `${attractionTitle},${city},${reviews},${relativeRanking},${ratio},${attractionType},${description},${isOpen},${suggestedDuration},${address},${imageUrl},${travelersChoiceAward},${likedStatus},${ticketPrice},${averageRating}\n`
+};
