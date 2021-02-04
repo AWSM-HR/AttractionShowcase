@@ -7,7 +7,7 @@
     "test": "jest --verbose",
     "test:coverage": "jest --collectCoverage",
     "test:watch": "jest --verbose --watch --detectOpenHandles",
-    "seed": "node db/seed.js",
+    "seed": "node db/seeding/seed_attractions.js && node db/seeding/seed_image.js && node db/seeding/seed_pictures.js",
     "start": "nodemon server",
     "build": "npx webpack --config webpack.config.js --watch",
     "build:prod": "npx webpack --config webpack.prod.js",
@@ -40,7 +40,8 @@
     "react-dom": "^17.0.1",
     "react-icons": "^4.1.0",
     "webpack": "^5.14.0",
-    "webpack-cli": "^4.3.1"
+    "webpack-cli": "^4.3.1",
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -66,7 +67,6 @@
     "regenerator-runtime": "^0.13.7",
     "style-loader": "^2.0.0",
     "supertest": "^6.1.1",
-    "webpack-dev-server": "^3.11.2",
-    "yargs": "^16.2.0"
+    "webpack-dev-server": "^3.11.2"
   }
 }
