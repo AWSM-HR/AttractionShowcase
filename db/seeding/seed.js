@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
-const { Pool } = require('postgres');
+const { Pool } = require('pg');
 
 const pool = new Pool({
   host: 'localhost',
-  user: 'Paula',
-  database: 'reviews',
+  user: '',
+  database: 'attractionShowcase',
   password: '',
   port: 5432,
 });
@@ -14,7 +14,8 @@ const createShowcaseTable = `CREATE TABLE IF NOT EXISTS showcase(
   attractionTitle TEXT,
   city TEXT,
   reviews INTEGER,
-  relativeRanking ARRAY,
+  relativeRanking1 INTEGER,
+  relativeRanking2 INTEGER,
   ratio INTEGER,
   attractionType TEXT,
   description TEXT,
