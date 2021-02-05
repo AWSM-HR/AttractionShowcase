@@ -2,7 +2,7 @@
 const fs = require('fs');
 const { argv } = require('yargs');
 
-const lines = argv.lines || 10;
+const lines = argv.lines || 10000000;
 const filename = argv.output || './db/seeding/images.csv';
 const stream = fs.createWriteStream(filename);
 

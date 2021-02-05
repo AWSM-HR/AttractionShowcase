@@ -7,7 +7,7 @@
     "test": "jest --verbose",
     "test:coverage": "jest --collectCoverage",
     "test:watch": "jest --verbose --watch --detectOpenHandles",
-    "seed": "node db/seeding/seed_attractions.js && node db/seeding/seed_image.js && export NODE_OPTIONS=--max-old-space-size=8192 && node db/seeding/seed_pictures.js",
+    "seed": "export NODE_OPTIONS=--max-old-space-size=8192 && node db/seeding/generator.js",
     "start": "nodemon server",
     "build": "npx webpack --config webpack.config.js --watch",
     "build:prod": "npx webpack --config webpack.prod.js",

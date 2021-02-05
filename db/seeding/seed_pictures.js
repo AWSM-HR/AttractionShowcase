@@ -2,7 +2,7 @@
 const fs = require('fs');
 const { argv } = require('yargs');
 
-const lines = argv.lines || 30;
+const lines = argv.lines || 30000000;
 const filename = argv.output || './db/seeding/pictures.csv';
 const stream = fs.createWriteStream(filename);
 
@@ -18,10 +18,9 @@ const randomGenerator = function (min, list) {
 };
 
 const createImage = (i) => {
-  const pictureId = i + 10;
+  const pictureId = i + 10000001;
   const attractionId = randomGenerator(1, 10000000);
   const imageUrl = urlGen(randomGenerator(1, 1000));
-  console.log(pictureId)
   return `${pictureId},${attractionId},${imageUrl}\n`;
 };
 

@@ -2,11 +2,16 @@
 /* eslint-disable func-names */
 const fs = require('fs');
 const faker = require('faker');
-const { argv } = require('yargs');
 
-const lines = argv.lines || 10000000;
-const filename = argv.output || './db/seeding/attractions.csv';
-const stream = fs.createWriteStream(filename);
+const attractionsLines = 10000000;
+const imagesLines = 10000000;
+const picturesLines = 30000000;
+const attractionsFileName = './db/seeding/attractions.csv';
+const imagesFileName = './db/seeding/images.csv';
+const picturesFileName = './db/seeding/pictures.csv';
+const attractionsStream = fs.createWriteStream(attractionsFileName);
+const imagesStream = fs.createWriteStream(imagesFileName);
+const picturesStream = fs.createWriteStream(picturesFileName);
 
 const attractionTypes = [
   'National Park',
@@ -36,6 +41,10 @@ const descriptions = [
   'Damnation seize my soul if I give you quarters, or take any from you. It’s not everyday you get to do a pirate movie, you might as well go for it.',
   'How much does the pirate pay for an ear piercing?',
 ];
+
+const urlGen = function (id) {
+  return `https://awsm-hr.s3.us-east-2.amazonaws.com/showcaseImages/images/image${id}.jpg`;
+};
 
 const randomGenerator = function (min, list) {
   if (typeof list === 'number') {
@@ -69,17 +78,36 @@ const createAttraction = (i) => {
   return `${attractionId},${attractionTitle},${city},${reviews},${relativeRanking1},${relativeRanking2},${ratio},${attractionType},"${description}",${isOpen},${suggestedDuration},"${address}",${travelersChoiceAward},${likedStatus},${ticketPrice},${averageRating}\n`;
 };
 
-const startWriting = (writeStream, encoding, done) => {
-  let i = lines;
+// Create 1 guaranteed picture per attraction
+let id = 1;
+const createImage = (i) => {
+  const pictureId = i + 1;
+  const attractionId = id;
+  const imageUrl = urlGen(randomGenerator(1, 1000));
+
+  id += 1;
+
+  return `${pictureId},${attractionId},${imageUrl}\n`;
+};
+// Create random # of additional images for attractions
+const createPicture = (i) => {
+  const pictureId = i + 10000001;
+  const attractionId = randomGenerator(1, 10000000);
+  const imageUrl = urlGen(randomGenerator(1, 1000));
+  return `${pictureId},${attractionId},${imageUrl}\n`;
+};
+
+const startWritingAttractions = (writeStream, encoding, done) => {
+  let i = attractionsLines;
   function writing() {
     const canWrite = true;
     do {
       i -= 1;
-      const post = createAttraction(i);
+      const attraction = createAttraction(i);
       if (i === 0) {
-        writeStream.write(post, encoding, done);
+        writeStream.write(attraction, encoding, done);
       } else {
-        writeStream.write(post, encoding);
+        writeStream.write(attraction, encoding);
       }
     } while (i > 0 && canWrite);
     if (i > 0 && !canWrite) {
@@ -89,7 +117,57 @@ const startWriting = (writeStream, encoding, done) => {
   writing();
 };
 
-stream.write('attractionId,attractionTitle,city,reviews,relativeRanking1,relativeRanking2,ratio,attractionType,description,isOpen,suggestedDuration,address,travelersChoiceAward,linkedStatus,ticketPrice,averageRating\n', 'utf-8');
-startWriting(stream, 'utf-8', () => {
-  stream.end();
+const startWritingImages = (writeStream, encoding, done) => {
+  let i = imagesLines;
+  function writing() {
+    const canWrite = true;
+    do {
+      i -= 1;
+      const image = createImage(i);
+      if (i === 0) {
+        writeStream.write(image, encoding, done);
+      } else {
+        writeStream.write(image, encoding);
+      }
+    } while (i > 0 && canWrite);
+    if (i > 0 && !canWrite) {
+      writeStream.once('drain', writing);
+    }
+  }
+  writing();
+};
+
+const startWritingPictures = (writeStream, encoding, done) => {
+  let i = picturesLines;
+  function writing() {
+    const canWrite = true;
+    do {
+      i -= 1;
+      const picture = createPicture(i);
+      if (i === 0) {
+        writeStream.write(picture, encoding, done);
+      } else {
+        writeStream.write(picture, encoding);
+      }
+    } while (i > 0 && canWrite);
+    if (i > 0 && !canWrite) {
+      writeStream.once('drain', writing);
+    }
+  }
+  writing();
+};
+
+attractionsStream.write('attractionId,attractionTitle,city,reviews,relativeRanking1,relativeRanking2,ratio,attractionType,description,isOpen,suggestedDuration,address,travelersChoiceAward,linkedStatus,ticketPrice,averageRating\n', 'utf-8');
+startWritingAttractions(attractionsStream, 'utf-8', () => {
+  attractionsStream.end();
+});
+
+imagesStream.write('pictureId,attractionId,imageUrl\n', 'utf-8');
+startWritingImages(imagesStream, 'utf-8', () => {
+  imagesStream.end();
+});
+
+picturesStream.write('pictureId,attractionId,imageUrl\n', 'utf-8');
+startWritingPictures(picturesStream, 'utf-8', () => {
+  picturesStream.end();
 });

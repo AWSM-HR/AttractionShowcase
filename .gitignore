@@ -11,3 +11,7 @@ images
 
 # production files
 dist
+
+.attractions.csv
+.images.csv
+.pictures.csv
