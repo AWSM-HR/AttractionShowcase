@@ -16,7 +16,7 @@ const createShowcaseTable = `CREATE TABLE IF NOT EXISTS showcase(
   reviews INTEGER,
   relativeRanking1 INTEGER,
   relativeRanking2 INTEGER,
-  ratio INTEGER,
+  ratio DECIMAL,
   attractionType TEXT,
   description TEXT,
   isOpen BOOLEAN,
@@ -25,7 +25,7 @@ const createShowcaseTable = `CREATE TABLE IF NOT EXISTS showcase(
   travelersChoiceAward BOOLEAN,
   linkedStatus BOOLEAN,
   ticketPrice INTEGER,
-  averageRating INTEGER
+  averageRating DECIMAL
 )`;
 
 const createImproveFormTable = `CREATE TABLE IF NOT EXISTS improveForm (
