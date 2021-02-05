@@ -9,14 +9,14 @@ CREATE TABLE IF NOT EXISTS showcase (
   attractionTitle TEXT,
   city TEXT,
   reviews INTEGER,
-  relativeRanking ARRAY,
+  relativeRanking1 INTEGER,
+  relativeRanking2 INTEGER,
   ratio INTEGER,
-  attrationType TEXT,
+  attractionType TEXT,
   description TEXT,
   isOpen BOOLEAN,
   suggestedDuration INTEGER,
   address TEXT,
-  imageUrl TEXT,
   travelersChoiceAward BOOLEAN,
   linkedStatus BOOLEAN,
   ticketPrice INTEGER,
@@ -30,5 +30,11 @@ CREATE TABLE IF NOT EXISTS improveForm (
   isOpen BOOLEAN,
   suggestedDuration INTEGER,
   address TEXT
+)
+
+CREATE TABLE IF NOT EXISTS pictures (
+  id SERIAL PRIMARY KEY,
+  attractionId INTEGER REFERENCES showcase(attractionId),
+  imageUrl: TEXT
 )
 
