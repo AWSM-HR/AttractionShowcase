@@ -60,7 +60,7 @@ showcase.get('/api/showcase/:id', async (req, res) => {
       },
       imageUrl: imageUrls,
       travelersChoiceAward: rows[0].travelerschoiceaward,
-      linkedStatus: rows[0].linkedstatus,
+      likedStatus: rows[0].likedstatus,
       averageRating: rows[0].averagerating,
     }];
     res.status(200).send(data);
@@ -71,8 +71,6 @@ showcase.get('/api/showcase/:id', async (req, res) => {
 
 showcase.post('/api/showcase/:attractionId', async (req, res) => {
   try {
-    // console.log(req.body);
-    console.log(req.params.attractionId);
     const { attractionId } = req.params;
     const {
       description, isOpen, suggestedDuration, address,
@@ -84,27 +82,22 @@ showcase.post('/api/showcase/:attractionId', async (req, res) => {
           message: 'Thank you! Your suggestions have been received. We will look into this and make changes as appropriate',
         });
       })
-      .catch((err) => {
-        res.status(406).send(err.message);
-      });
+      .catch((err) => res.status(406).send(err.message));
   } catch (err) {
     res.status(406).send(err.message);
   }
 });
 
-// showcase.patch('/api/showcase/like/:id', (req, res) => {
-//   const { id } = req.params;
-//   const { likedStatus } = req.body;
-//   if (typeof likedStatus !== 'boolean') {
-//     res.status(400).send('likedStatus must be a boolean');
-//     return;
-//   }
-//   ShowCase.findByIdAndUpdate(id, { likedStatus },
-//     { new: true, useFindAndModify: false })
-//     .then((data) => res.status(200).send(data))
-//     .catch(() => {
-//       res.status(400).send('Error Patching liked status');
-//     });
-// });
+showcase.patch('/api/showcase/like/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const query = `UPDATE showcase SET likedStatus = true WHERE attractionId = ${id}`;
+    pool().query(query)
+      .then(() => res.status(201).send('Updated likedStatus'))
+      .catch(() => res.status(400).send('Error Patching liked status'));
+  } catch (err) {
+    res.status(400).send('Error Patching liked status');
+  }
+});
 
 module.exports = showcase;

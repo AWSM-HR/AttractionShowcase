@@ -23,7 +23,7 @@ const createShowcaseTable = `CREATE TABLE IF NOT EXISTS showcase(
   suggestedDuration INTEGER,
   address TEXT,
   travelersChoiceAward BOOLEAN,
-  linkedStatus BOOLEAN,
+  likedStatus BOOLEAN,
   ticketPrice INTEGER,
   averageRating DECIMAL
 )`;
