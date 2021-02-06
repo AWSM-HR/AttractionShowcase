@@ -30,7 +30,7 @@ const createShowcaseTable = `CREATE TABLE IF NOT EXISTS showcase(
 
 const createImproveFormTable = `CREATE TABLE IF NOT EXISTS improveForm (
   suggestionId SERIAL PRIMARY KEY,
-  atttractionID INTEGER REFERENCES showcase(attractionId),
+  attractionId INTEGER REFERENCES showcase(attractionId),
   description TEXT,
   isOpen BOOLEAN,
   suggestedDuration INTEGER,

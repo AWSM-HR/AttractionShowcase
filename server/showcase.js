@@ -1,43 +1,96 @@
 /* eslint-disable no-console */
 const express = require('express');
-const { findOne } = require('../db/index.js');
+const { pool } = require('../db/index.js');
 
 const showcase = express.Router();
 
-showcase.get('/api/showcase/:id', (req, res) => {
-  findOne(req.params.id, (err, data) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      res.status(200).send(data);
-    }
-  });
+showcase.get('/api/showcase', async (req, res) => {
+  try {
+    const { rows } = await pool().query('SELECT * FROM showcase WHERE attractionId = 13');
+    const images = await pool().query('SELECT * FROM pictures WHERE attractionId = 13');
+    const imageUrls = [];
+    images.rows.forEach((row) => {
+      imageUrls.push(row.imageurl);
+    });
+    const data = [{
+      attractionId: rows[0].attractionid,
+      city: rows[0].city,
+      reviews: rows[0].reviews,
+      relativeRanking: [rows[0].relativeranking1, rows[0].relativeranking2],
+      ratio: rows[0].ratio,
+      attractionType: rows[0].attractiontype,
+      overview: {
+        description: rows[0].description,
+        isOpen: rows[0].isOpen,
+        suggestedDuration: rows[0].suggestedduration,
+        address: rows[0].address,
+      },
+      imageUrl: imageUrls,
+      travelersChoiceAward: rows[0].travelerschoiceaward,
+      linkedStatus: rows[0].linkedstatus,
+      averageRating: Number(rows[0].averagerating),
+    }];
+    res.status(200).send(data);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-// showcase.get('/api/showcase/:id', (req, res) => {
-//   const { id } = req.params;
+showcase.get('/api/showcase/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rows } = await pool().query(`SELECT * FROM showcase WHERE attractionId = ${id}`);
+    const images = await pool().query(`SELECT * FROM pictures WHERE attractionId = ${id}`);
+    const imageUrls = [];
+    images.rows.forEach((row) => {
+      imageUrls.push(row.imageurl);
+    });
+    const data = [{
+      attractionId: rows[0].attractionid,
+      city: rows[0].city,
+      reviews: rows[0].reviews,
+      relativeRanking: [rows[0].relativeranking1, rows[0].relativeranking2],
+      ratio: rows[0].ratio,
+      attractionType: rows[0].attractiontype,
+      overview: {
+        description: rows[0].description,
+        isOpen: rows[0].isOpen,
+        suggestedDuration: rows[0].suggestedduration,
+        address: rows[0].address,
+      },
+      imageUrl: imageUrls,
+      travelersChoiceAward: rows[0].travelerschoiceaward,
+      linkedStatus: rows[0].linkedstatus,
+      averageRating: rows[0].averagerating,
+    }];
+    res.status(200).send(data);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
 
-//   ShowCase.findById(id)
-//     .then((data) => res.status(200).send(data))
-//     .catch(() => {
-//       res.status(400).send('Error Getting by Id');
-//     });
-// });
-
-// showcase.post('/api/showcase/:attractionId', (req, res) => {
-//   const { form } = req.body;
-//   const { attractionId } = req.params;
-//   const obj = { ...form, attractionId };
-
-//   postForm(obj, (err) => {
-//     if (err) res.status(406).send(err.message);
-//     else {
-//       res.status(201).send({
-//         message: 'Thank You! Your suggestions have been received.  We will look into this and make changes as appropriate',
-//       });
-//     }
-//   });
-// });
+showcase.post('/api/showcase/:attractionId', async (req, res) => {
+  try {
+    // console.log(req.body);
+    console.log(req.params.attractionId);
+    const { attractionId } = req.params;
+    const {
+      description, isOpen, suggestedDuration, address,
+    } = req.body.form;
+    const query = `INSERT INTO improveForm(attractionId, description, isOpen, suggestedDuration, address) VALUES (${attractionId}, '${description}', ${isOpen}, ${suggestedDuration}, '${address}')`;
+    pool().query(query)
+      .then(() => {
+        res.status(201).send({
+          message: 'Thank you! Your suggestions have been received. We will look into this and make changes as appropriate',
+        });
+      })
+      .catch((err) => {
+        res.status(406).send(err.message);
+      });
+  } catch (err) {
+    res.status(406).send(err.message);
+  }
+});
 
 // showcase.patch('/api/showcase/like/:id', (req, res) => {
 //   const { id } = req.params;

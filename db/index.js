@@ -8,16 +8,21 @@ const pool = new Pool({
   port: 5432,
 });
 
-const findOne = (id, cb) => {
-  pool.query(`SELECT * FROM showcase WHERE attractionId = ${id}`, (err, data) => {
-    if (err) {
-      cb(err, null);
-    } else {
-      cb(null, data);
-    }
-  });
+module.exports = {
+  pool: () => pool,
 };
 
-module.exports = {
-  findOne,
-};
+
+// const findOne = (id, cb) => {
+//   pool.query(`SELECT * FROM showcase WHERE attractionId = ${id}`, (err, data) => {
+//     if (err) {
+//       cb(err, null);
+//     } else {
+//       cb(null, data);
+//     }
+//   });
+// };
+
+// module.exports = {
+//   findOne,
+// };
