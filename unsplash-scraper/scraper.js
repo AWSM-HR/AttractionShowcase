@@ -18,10 +18,10 @@ const searchAndSaveUnsplash = function (searchTerm, qty, page, relativePath) {
   axios.get(unsplashURL)
     .then(({ data }) => {
       data.results.forEach((result, i) => {
-        saveImageToDisk(result.urls.regular, `${relativePath}${i + 89}.jpg`);
+        saveImageToDisk(result.urls.regular, `${relativePath}${i}.jpg`);
       });
     })
     .catch((err) => console.log(err));
 };
 
-searchAndSaveUnsplash('thailand', 30, 1, '../images/thailand_');
+searchAndSaveUnsplash('denver', 10, 2, '../test/image');
