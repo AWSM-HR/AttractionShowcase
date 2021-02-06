@@ -45,8 +45,8 @@ const createPicturesTable = `CREATE TABLE IF NOT EXISTS pictures (
 
 pool.connect((err, client, done) => {
   client.query('DROP TABLE IF EXISTS showcase CASCADE')
-    .then(() => client.query('DROP TABLE IF EXISTS improveForm'))
-    .then(() => client.query('DROP TABLE IF EXISTS pictures'))
+    .then(() => client.query('DROP TABLE IF EXISTS improveForm CASCADE'))
+    .then(() => client.query('DROP TABLE IF EXISTS pictures CASCASE'))
     .then(() => client.query(createShowcaseTable))
     .then(() => client.query(createImproveFormTable))
     .then(() => client.query(createPicturesTable))

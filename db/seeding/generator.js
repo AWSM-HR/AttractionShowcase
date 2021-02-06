@@ -3,9 +3,6 @@
 const fs = require('fs');
 const faker = require('faker');
 
-const attractionsLines = 10000000;
-const imagesLines = 10000000;
-const picturesLines = 30000000;
 const attractionsFileName = './db/seeding/attractions.csv';
 const imagesFileName = './db/seeding/images.csv';
 const picturesFileName = './db/seeding/pictures.csv';
@@ -98,7 +95,7 @@ const createPicture = (i) => {
 };
 
 const startWritingAttractions = (writeStream, encoding, done) => {
-  let i = attractionsLines;
+  let i = 10000000;
   function writing() {
     const canWrite = true;
     do {
@@ -118,7 +115,7 @@ const startWritingAttractions = (writeStream, encoding, done) => {
 };
 
 const startWritingImages = (writeStream, encoding, done) => {
-  let i = imagesLines;
+  let i = 10000000;
   function writing() {
     const canWrite = true;
     do {
@@ -138,7 +135,7 @@ const startWritingImages = (writeStream, encoding, done) => {
 };
 
 const startWritingPictures = (writeStream, encoding, done) => {
-  let i = picturesLines;
+  let i = 30000000;
   function writing() {
     const canWrite = true;
     do {
