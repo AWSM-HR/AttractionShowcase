@@ -1,5 +1,8 @@
+require('newrelic');
+
 /* eslint-disable no-console */
 const express = require('express');
+
 const { pool } = require('../db/index.js');
 
 const showcase = express.Router();
@@ -7,7 +10,7 @@ const showcase = express.Router();
 showcase.get('/api/showcase', async (req, res) => {
   try {
     const { rows } = await pool().query('SELECT * FROM showcase WHERE attractionId = 13');
-    const images = await pool().query('SELECT * FROM pictures WHERE attractionId = 13');
+    const images = await pool().query(`SELECT * FROM pictures WHERE attractionId = ${Math.floor(Math.random() * 10000000)}`);
     const imageUrls = [];
     images.rows.forEach((row) => {
       imageUrls.push(row.imageurl);

@@ -4,3 +4,4 @@ config
 unsplash-scraper
 /src/styles
 script.js
+newrelic.js
