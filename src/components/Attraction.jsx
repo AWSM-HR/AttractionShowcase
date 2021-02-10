@@ -28,7 +28,7 @@ export default class Attraction extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/showcase')
+    axios.get('http://52.14.8.88:3001/api/showcase')
       .then(({ data }) => {
         this.setState({
           current: data[0],
