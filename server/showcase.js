@@ -1,5 +1,4 @@
 require('newrelic');
-
 /* eslint-disable no-console */
 const express = require('express');
 
@@ -17,6 +16,7 @@ showcase.get('/api/showcase', async (req, res) => {
     });
     const data = [{
       attractionId: rows[0].attractionid,
+      attractionTitle: rows[0].attractiontitle,
       city: rows[0].city,
       reviews: rows[0].reviews,
       relativeRanking: [rows[0].relativeranking1, rows[0].relativeranking2],
@@ -50,6 +50,7 @@ showcase.get('/api/showcase/:id', async (req, res) => {
     });
     const data = [{
       attractionId: rows[0].attractionid,
+      attractionTitle: rows[0].attractiontitle,
       city: rows[0].city,
       reviews: rows[0].reviews,
       relativeRanking: [rows[0].relativeranking1, rows[0].relativeranking2],
