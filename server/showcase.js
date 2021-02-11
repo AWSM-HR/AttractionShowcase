@@ -8,8 +8,9 @@ const showcase = express.Router();
 
 showcase.get('/api/showcase', async (req, res) => {
   try {
-    const { rows } = await pool().query('SELECT * FROM showcase WHERE attractionId = 13');
-    const images = await pool().query(`SELECT * FROM pictures WHERE attractionId = ${Math.floor(Math.random() * 10000000)}`);
+    const id = Math.floor(Math.random() * 10000000);
+    const { rows } = await pool().query(`SELECT * FROM showcase WHERE attractionId = ${id}`);
+    const images = await pool().query(`SELECT * FROM pictures WHERE attractionId = ${id}`);
     const imageUrls = [];
     images.rows.forEach((row) => {
       imageUrls.push(row.imageurl);
