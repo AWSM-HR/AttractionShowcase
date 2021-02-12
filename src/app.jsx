@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Attraction from './components/Attraction';
 import './styles/styles.css';
+import Router from './components/Router';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +15,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <Attraction />
+      <Router/>
     );
   }
 }

@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import axios from 'axios';
 import Header from './Header';
@@ -28,7 +31,7 @@ export default class Attraction extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://3.141.8.85:3001/api/showcase')
+    axios.get(`http://3.131.38.83:3001/api/showcase/${this.props.id}`)
       .then(({ data }) => {
         this.setState({
           current: data[0],

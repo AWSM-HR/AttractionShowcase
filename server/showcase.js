@@ -66,7 +66,7 @@ showcase.get('/api/showcase/:id', async (req, res) => {
       imageUrl: imageUrls,
       travelersChoiceAward: rows[0].travelerschoiceaward,
       likedStatus: rows[0].likedstatus,
-      averageRating: rows[0].averagerating,
+      averageRating: Number(rows[0].averagerating),
     }];
     res.status(200).send(data);
   } catch (err) {
